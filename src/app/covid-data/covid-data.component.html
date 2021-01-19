@@ -1,0 +1,87 @@
+<div class="text-center">
+	<div id = "titlelogo">
+	<img id = "covidimage" src="https://firebasestorage.googleapis.com/v0/b/covid19-5dfcc.appspot.com/o/covidmainpage.png?alt=media&token=9b383c2b-4ae9-4e5f-9528-353577957bf7" alt = "virus image" >
+	<h1 id = "titletext">COVID-19</h1>
+	</div>
+
+	<p>Live Updates and Statistics</p>
+</div>
+
+
+<div class="my-3">
+  <table class="table table-bordered ">
+	<caption> Corona Virus Summary Worldwide </caption>
+    <tbody>
+          <tr class= table-warning>
+        <td>Total Cases</td>
+        <td>{{dataWorld.totalCases}}</td>
+        </tr>
+         <tr class= table-warning>
+        <td>New Cases</td>
+	<td>{{dataWorld.newCases}}</td>
+	      </tr>
+      <tr class= table-warning>
+        <td>Active cases</td>
+        <td>{{dataWorld.activeCases}}</td>
+      </tr>
+      <tr class= table-info>
+        <td>Total Recovered</td>
+                <td>{{dataWorld.totalRecovered}}</td>
+              </tr>
+      <tr class= table-info>
+        <td>New Recovered</td>
+                <td>{{dataWorld.newRecovered}}</td>
+              </tr>
+      <tr class= table-info>
+        <td>Recovery Rate</td>
+                <td>{{dataWorld.recoveryRate}} %</td>
+      </tr>
+      <tr class= table-danger>
+        <td>Total Death</td>
+                <td>{{dataWorld.totalDeaths}}</td>
+              </tr>
+      <tr class= table-danger>
+        <td>New Deaths</td>
+                <td>{{dataWorld.newDeaths}}</td>
+              </tr>
+      <tr class= table-danger>
+        <td>Mortality rate</td>
+                <td>{{dataWorld.mortalityRate}} %</td>
+      </tr>
+
+    </tbody>
+  </table>
+  </div>
+
+  <div>
+  <canvas id = "pieChart"></canvas>
+  </div>
+
+
+<div *ngFor="let item of dataCountry">
+  {{item}}
+</div>
+
+<div class="my-3" *ngIf="news && news.length > 0">
+  <table class="table table-bordered table-striped">
+    <thead>
+      <tr>
+        <th>Date</th>
+        <th>User</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let news_item of news">
+        <td>{{ news_item.date.toDate() | date }}</td>
+        <td>{{ news_item.user }}</td>
+        <td>{{ news_item.description }}</td>
+      </tr>
+    </tbody>
+  </table>
+  <p class="font-italic">Last Updated: {{ lastUpdated?.toDate() | date }}</p>
+</div>
+
+<a href= "signin" target="_blank"><input type="button" value= "Sign in"></a>
+<a href= "news" target="_blank"><input type="button" value= "Add News"></a>
+
