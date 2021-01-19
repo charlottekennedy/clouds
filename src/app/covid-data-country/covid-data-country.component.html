@@ -1,1 +1,44 @@
-<p>covid-data-country works!</p>
+<div class="my-3">
+  <table class="table table-bordered ">
+	<caption> Corona Virus Summary in {{ name }}</caption>
+    <tbody>
+          <tr class= table-warning>
+        <td>Total Cases</td>
+        <td>{{dataC.totalCases}}</td>
+        </tr>
+         <tr class= table-warning>
+        <td>New Cases</td>
+	<td>{{dataC.newCases}}</td>
+	      </tr>
+      <tr class= table-warning>
+        <td>Active cases</td>
+        <td>{{dataC.activeCases}}</td>
+      </tr>
+      <tr class= table-info>
+        <td>Total Recovered</td>
+                <td>{{dataC.totalRecovered}}</td>
+              </tr>
+      <tr class= table-info>
+        <td>New Recovered</td>
+                <td>{{dataC.newRecovered}}</td>
+              </tr>
+      <tr class= table-info>
+        <td>Recovery Rate</td>
+                <td>{{dataC.recoveryRate}} %</td>
+      </tr>
+      <tr class= table-danger>
+        <td>Total Death</td>
+                <td>{{dataC.totalDeaths}}</td>
+              </tr>
+      <tr class= table-danger>
+        <td>New Deaths</td>
+                <td>{{dataC.newDeaths}}</td>
+              </tr>
+      <tr class= table-danger>
+        <td>Mortality rate</td>
+                <td>{{dataC.mortalityRate}} %</td>
+      </tr>
+
+    </tbody>
+  </table>
+  </div>

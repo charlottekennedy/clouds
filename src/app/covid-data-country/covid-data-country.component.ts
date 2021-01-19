@@ -1,4 +1,8 @@
 import { Component, OnInit } from '@angular/core';
+import { DataCountry } from '../dataCountry.model';
+import { CovidService } from '../covid.service';
+import { News } from '../news.model';
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'app-covid-data-country',
@@ -6,10 +10,21 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./covid-data-country.component.css']
 })
 export class CovidDataCountryComponent implements OnInit {
+    news : News[];
+    private sub: any;
+    name : String;
+    dataC: DataCountry;
 
-  constructor() { }
+
+  constructor(private route: ActivatedRoute, public covidService : CovidService) { }
 
   ngOnInit(): void {
+      
+      this.sub = this.route.paramMap.subscribe(params => {
+      this.name = params.get('name');
+  })
+  
+  this.dataC = this.covidService.getDataOneCountry(this.name);
   }
-
 }
+    

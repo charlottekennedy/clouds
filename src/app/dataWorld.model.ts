@@ -1,4 +1,5 @@
 export class DataWorld{
+    date: string;
 	totalCases: number;
 	newCases: number;
 	activeCases: number;

@@ -18,7 +18,7 @@ export class CovidDataComponent implements OnInit {
 
   news: News[];
   user: User;
-  dataCountry: DataCountry[];
+  dataCountry: Array<DataCountry>;
   dataWorld : DataWorld;
 
   
@@ -36,7 +36,10 @@ export class CovidDataComponent implements OnInit {
   	
   	this.covidService.APISummary();
   	this.dataWorld = this.covidService.getDataWorld();
-
+    this.dataCountry = this.covidService.getDataCountry();
+    for (var c of this.dataCountry){
+      console.log(c.country);
+  }
 	this.pieChart();
   	
   	/*this.covidService.getDataCountries().subscribe(

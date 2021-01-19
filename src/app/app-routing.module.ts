@@ -11,7 +11,7 @@ import { SecurePagesGuard } from './secure-pages.guard';
 const routes: Routes = [
    {path : "signin", component: SigninComponent, canActivate: [SecurePagesGuard]},
    {path : "worldwide", component : CovidDataComponent},
-   {path : "country", component : CovidDataCountryComponent},
+   {path : "country/:name", component : CovidDataCountryComponent},
    {path : "news", component : NewsComponent, canActivate: [AuthGuard]},
    {path : "", pathMatch: "full", redirectTo : "worldwide"},
    {path: "**", redirectTo : "worldwide"}

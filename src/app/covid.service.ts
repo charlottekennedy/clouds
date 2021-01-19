@@ -10,6 +10,7 @@ import { DataCountry } from './dataCountry.model';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { DataWorld } from './dataWorld.model';
+import { DatePipe } from '@angular/common'
 
 
 @Injectable({
@@ -18,10 +19,11 @@ import { DataWorld } from './dataWorld.model';
 export class CovidService {
 
   private user: User;
+  private date_latest_update: String;
   private dataWorld : DataWorld;
-  private dataCountry : DataCountry[];
+  private dataCountry : Array<DataCountry>;
 
-  constructor(private afAuth: AngularFireAuth, private router: Router, private firestore: AngularFirestore, protected http: HttpClient) { }
+  constructor(private afAuth: AngularFireAuth, private router: Router, private firestore: AngularFirestore, protected http: HttpClient, public datepipe: DatePipe) { }
   
   async signInWithGoogle(){
   	const credentials = await this.afAuth.signInWithPopup(new firebase.auth.GoogleAuthProvider());
@@ -72,11 +74,11 @@ export class CovidService {
     .collection("news").add(news_item);
   }
 
-APISummary(){
-	var global;
-	this.getSummary().subscribe(response =>{
-  	global = response["Global"];});
+async APISummary(){
+	let summ = await this.getSummary();
+  	var global = summ["Global"];
   	this.dataWorld = {
+    date : summ["Date"].slice(0,10),
   	 totalCases: global["TotalConfirmed"],
   	 newCases: global["NewConfirmed"],
 	activeCases: global["TotalConfirmed"] - global["TotalRecovered"],
@@ -87,17 +89,35 @@ APISummary(){
   	newDeaths: global["NewDeaths"],
   	mortalityRate: global["TotalDeaths"]/global["TotalConfirmed"] *100
   	};
-  	/*this.dataCountry = response["Countries"];
-  	});*/
-  	localStorage.setItem("worldData", JSON.stringify(this.dataWorld));
-  	/*localStorage.setItem("countryData", JSON.stringify(this.dataCountry));*/
+    
+    var countries = summ["Countries"];
+  	this.dataCountry = [];
+    for (var c of countries){
+        this.dataCountry.push({
+    country: c["Country"],
+    totalCases: c["TotalConfirmed"],
+    newCases: c["NewConfirmed"],
+	activeCases: c["TotalConfirmed"] - c["TotalRecovered"],
+  	totalRecovered: c["TotalRecovered"],
+  	newRecovered: c["NewRecovered"],
+  	recoveryRate: c["TotalRecovered"]/ c["TotalConfirmed"] *100,
+  	totalDeaths: c["TotalDeaths"],
+  	newDeaths: c["NewDeaths"],
+  	mortalityRate: c["TotalDeaths"]/c["TotalConfirmed"] *100
+        }
+        )
+    }
+  	
+  	localStorage.setItem("dataWorld", JSON.stringify(this.dataWorld));
+  	localStorage.setItem("dataCountry", JSON.stringify(this.dataCountry));
   	this.updateDataWorld();
-  	/*this.updateCountryData();*/
+  	this.updateDataCountry();
   
   }
   
 private updateDataWorld(){
-  	this.firestore.collection("dataWorld").doc("data").set({
+    this.firestore.collection("dataWorld").doc("data").set({
+    date : this.dataWorld.date,
   	totalCases: this.dataWorld.totalCases,
   	newCases: this.dataWorld.newCases,
   	activeCases: this.dataWorld.activeCases,
@@ -112,14 +132,61 @@ private updateDataWorld(){
  
  
    getDataWorld(){
+       let date = new Date();
+       let latest_date= this.datepipe.transform(date, 'yyy-MM-dd');
+       
+       if(this.dataWorld == null || this.date_latest_update != latest_date){
+      this.APISummary();
+      this.date_latest_update = latest_date;
+    }
+       this.dataWorld = JSON.parse(localStorage.getItem("dataWorld"));
     return this.dataWorld;
   }
-/*private updateCountryData(){	this.firestore.collection("dataWorld").doc(this.dataCountry.country).set({
-	
-	}, {merge: true});
-}*/
-    public getSummary(){
-    return this.http.get<JSON>('https://api.covid19api.com/summary');
+
+private updateDataCountry(){
+   for (var country of this.dataCountry){
+       this.firestore.collection("dataCountry").doc(country["Country"]).set({
+  	totalCases: country.totalCases,
+  	newCases: country.newCases,
+  	activeCases: country.activeCases,
+  	totalRecovered: country.totalRecovered,
+  	newRecovered: country.newRecovered,
+  	recoveryRate: country.recoveryRate,
+  	totalDeaths: country.totalDeaths,
+  	newDeaths: country.newDeaths,
+  	mortalityRate: country.mortalityRate
+  	}, {merge: true});
+  }
+}
+
+   getDataCountry(){
+       let date = new Date();
+       let latest_date= this.datepipe.transform(date, 'yyy-MM-dd');
+       
+       if(this.dataWorld == null || this.date_latest_update != latest_date){
+      this.APISummary();
+      this.date_latest_update = latest_date;
+    }
+       this.dataCountry = JSON.parse(localStorage.getItem("dataCountry"));
+    return this.dataCountry;
+  }
+
+goToCountry(c : String){
+        this.router.navigate(['country/', c], {queryParams: {name: c}});
+        }
+
+
+getDataOneCountry(c : String){
+    this.dataCountry = this.getDataCountry();
+        for (var data of this.dataCountry){
+        if (c==data.country){
+            return data;
+        }
+    }
+}
+
+getSummary(){
+    return this.http.get<JSON>('https://api.covid19api.com/summary').toPromise();
   }
   
   /*displayNews(country: String){
