@@ -81,7 +81,7 @@ async APISummary(){
     date : summ["Date"].slice(0,10),
   	 totalCases: global["TotalConfirmed"],
   	 newCases: global["NewConfirmed"],
-	activeCases: global["TotalConfirmed"] - global["TotalRecovered"],
+	activeCases: global["TotalConfirmed"] - global["TotalRecovered"] - global["TotalDeaths"],
   	totalRecovered: global["TotalRecovered"],
   	newRecovered: global["NewRecovered"],
   	recoveryRate: global["TotalRecovered"]/ global["TotalConfirmed"] *100,
@@ -97,7 +97,7 @@ async APISummary(){
     country: c["Country"],
     totalCases: c["TotalConfirmed"],
     newCases: c["NewConfirmed"],
-	activeCases: c["TotalConfirmed"] - c["TotalRecovered"],
+	activeCases: c["TotalConfirmed"] - c["TotalRecovered"] - c["TotalDeaths"],
   	totalRecovered: c["TotalRecovered"],
   	newRecovered: c["NewRecovered"],
   	recoveryRate: c["TotalRecovered"]/ c["TotalConfirmed"] *100,
@@ -188,6 +188,10 @@ getDataOneCountry(c : String){
 getSummary(){
     return this.http.get<JSON>('https://api.covid19api.com/summary').toPromise();
   }
+
+getSummaryCountryConfirmed(c : String){
+    return this.http.get<JSON>('https://api.covid19api.com/dayone/country/france/status/confirmed').toPromise();
+}
   
   /*displayNews(country: String){
   let news = [];

@@ -49,7 +49,23 @@ export class CovidDataComponent implements OnInit {
   }
   
   pieChart(){
-  	
+      var canva = document.getElementById<HTMLCanvasElement>("pieChart");
+  	  var ctxP = canva.getContext('2d');
+      var myPieChart = new Chart(ctxP, {
+      type: 'pie',
+      data: {
+        labels: ["Dead Cases", "Recovered Cases", "Active Cases"],
+        datasets: [{
+          data: [this.dataWorld.totalDeaths, this.dataWorld.totalRecovered, this.dataWorld.activeCases],
+          backgroundColor: ["#F7464A", "#46BFBD", "#FDB45C"],
+          hoverBackgroundColor: ["#FF5A5E", "#5AD3D1", "#FFC870"]
+        }]
+      },
+      options: {
+        responsive: true
+      }
+    });
+      
 }
 
 }
