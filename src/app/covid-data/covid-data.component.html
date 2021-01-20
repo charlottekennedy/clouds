@@ -14,15 +14,15 @@
         <td>Active cases</td>
         <td>{{dataWorld.activeCases}}</td>
       </tr>
-      <tr class= table-info>
+      <tr class= table-primary>
         <td>Total Recovered</td>
                 <td>{{dataWorld.totalRecovered}}</td>
               </tr>
-      <tr class= table-info>
+      <tr class= table-primary>
         <td>New Recovered</td>
                 <td>{{dataWorld.newRecovered}}</td>
               </tr>
-      <tr class= table-info>
+      <tr class= table-primary>
         <td>Recovery Rate</td>
                 <td>{{dataWorld.recoveryRate}} %</td>
       </tr>
@@ -43,35 +43,40 @@
   </table>
   </div>
 
-  <div>
-  <canvas id = "pieChart"></canvas>
-  </div>
+<div style="display: block;">
+  <canvas baseChart
+    [data]="pieChartData"
+    [labels]="pieChartLabels"
+    [chartType]="pieChartType"
+    [options]="pieChartOptions"
+    [plugins]="pieChartPlugins"
+    [legend]="pieChartLegend">
+  </canvas>
+</div>
 
-<div class="my-3" *ngIf="dataCountry && dataCountry.length > 0">
-  <table class="table table-bordered table-striped">
+<div class="my-3" *ngIf="sortedData && sortedData.length > 0">
+  <table class="table table-bordered table-striped" matSort (matSortChange)="sortData($event)">
     <thead>
       <tr>
-        <th>Country</th>
-        <th>New Cases</th>
-        <th>Total Cases</th>
-        <th>New Recoveries</th>
-        <th>Total Recoveries</th>
-        <th>New Deaths</th>
-        <th>Total Deaths</th>
+        <th mat-sort-header="country" class= table-secondary>Country</th>
+        <th mat-sort-header="newCases" class= table-warning>New Cases</th>
+        <th mat-sort-header="totalCases" class= table-warning>Total Cases</th>
+        <th mat-sort-header="newRecovered" class= table-primary>New Recoveries</th>
+        <th mat-sort-header="totalRecovered" class= table-primary>Total Recoveries</th>
+        <th mat-sort-header="newDeaths" class= table-danger>New Deaths</th>
+        <th mat-sort-header="totalDeaths" class= table-danger>Total Deaths</th>
       </tr>
     </thead>
     <tbody>
-      <tr *ngFor="let data of dataCountry"
-          [routerLink]="['/country', data.country]">
-          <button class="btn btn-info" (click) = "covidService.goToCountry(data.country)">
-        <td>{{ data.country }}</td>
-        <td>{{ data.newCases }}</td>
-        <td>{{ data.totalCases }}</td>
-        <td>{{ data.newRecovered }}</td>
-        <td>{{ data.totalRecovered}}</td>
-        <td>{{ data.newDeaths }}</td>
-        <td>{{ data.totalDeaths }}</td>
-              </button>
+      <tr *ngFor="let data of sortedData"
+          [routerLink]="['/country', data.country]" ng-click= "covidService.goToCountry(data.country)">
+        <td class= table-secondary>{{ data.country }}</td>
+        <td class= table-warning>{{ data.newCases }}</td>
+        <td class= table-warning>{{ data.totalCases }}</td>
+        <td class= table-primary>{{ data.newRecovered }}</td>
+        <td class= table-primary>{{ data.totalRecovered}}</td>
+        <td class= table-danger>{{ data.newDeaths }}</td>
+        <td class= table-danger>{{ data.totalDeaths }}</td>
       </tr>
     </tbody>
   </table>

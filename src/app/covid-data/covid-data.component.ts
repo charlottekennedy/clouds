@@ -5,7 +5,9 @@ import { User } from '../user.model';
 import { News } from '../news.model';
 import { DataCountry } from '../dataCountry.model';
 import { DataWorld } from '../dataWorld.model';
-import * as Chart from 'chart.js';
+import { ChartType, ChartOptions } from 'chart.js';
+import { Sort } from '@angular/material/sort';
+import { SingleDataSet, Label, monkeyPatchChartJsLegend, monkeyPatchChartJsTooltip } from 'ng2-charts';
 
 @Component({
   selector: 'app-covid-data',
@@ -20,9 +22,21 @@ export class CovidDataComponent implements OnInit {
   user: User;
   dataCountry: Array<DataCountry>;
   dataWorld : DataWorld;
+  sortedData: Array<DataCountry>;
 
+
+  public pieChartOptions: ChartOptions = {
+    responsive: true,
+  };
+  public pieChartLabels: Label[] = ['Dead Cases', 'Recovered Cases', 'Active Cases'];
+  public pieChartData: SingleDataSet;
+  public pieChartType: ChartType = 'pie';
+  public pieChartLegend = true;
+  public pieChartPlugins = [];
   
   constructor(public covidService : CovidService) { 
+      monkeyPatchChartJsTooltip();
+    monkeyPatchChartJsLegend();
   }
 
   ngOnInit(): void {
@@ -34,38 +48,45 @@ export class CovidDataComponent implements OnInit {
   		this.news = news;
   	});*/
   	
-  	this.covidService.APISummary();
   	this.dataWorld = this.covidService.getDataWorld();
     this.dataCountry = this.covidService.getDataCountry();
-    for (var c of this.dataCountry){
-      console.log(c.country);
-  }
-	this.pieChart();
-  	
+    this.sortedData = this.dataCountry;
+    console.log(this.dataWorld.totalDeaths);
+    this.pieChartData =  [this.dataWorld.totalDeaths, this.dataWorld.totalRecovered, this.dataWorld.activeCases];
+
   	/*this.covidService.getDataCountries().subscribe(
   	  dataCountry => this.dataCountry = dataCountry
   	);*/
   	
   }
   
-  pieChart(){
-      var canva = document.getElementById<HTMLCanvasElement>("pieChart");
-  	  var ctxP = canva.getContext('2d');
-      var myPieChart = new Chart(ctxP, {
-      type: 'pie',
-      data: {
-        labels: ["Dead Cases", "Recovered Cases", "Active Cases"],
-        datasets: [{
-          data: [this.dataWorld.totalDeaths, this.dataWorld.totalRecovered, this.dataWorld.activeCases],
-          backgroundColor: ["#F7464A", "#46BFBD", "#FDB45C"],
-          hoverBackgroundColor: ["#FF5A5E", "#5AD3D1", "#FFC870"]
-        }]
-      },
-      options: {
-        responsive: true
-      }
+
+sortData(sort: Sort){
+    this.sortedData = this.dataCountry.slice();
+    const data = this.dataCountry.slice();
+    if (!sort.active || sort.direction === ''){
+        this.sortedData = data;
+        return;
+    }
+    
+    this.sortedData = data.sort((a,b) => {
+        const isAsc = sort.direction === 'asc';
+        switch (sort.active){
+            case 'country': return compare(a.country, b.country, isAsc);
+            case 'newCases': return compare(a.totalCases, b.totalCases, isAsc);
+            case 'totalCases': return compare(a.totalCases, b.totalCases, isAsc);
+            case 'newRecovered': return compare(a.totalCases, b.totalCases, isAsc);
+            case 'totalRecovered': return compare(a.totalCases, b.totalCases, isAsc);
+            case 'newDeaths': return compare(a.totalCases, b.totalCases, isAsc);
+            case 'totalDeaths': return compare(a.totalCases, b.totalCases, isAsc);
+            default: return 0;
+        }
     });
-      
+}
 }
 
+function compare(a: number | string, b: number | string, isAsc: boolean){
+    return (a < b ? -1 : 1) * (isAsc ? 1 : -1);
 }
+
+

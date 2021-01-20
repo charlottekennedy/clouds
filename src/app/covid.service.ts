@@ -19,7 +19,6 @@ import { DatePipe } from '@angular/common'
 export class CovidService {
 
   private user: User;
-  private date_latest_update: String;
   private dataWorld : DataWorld;
   private dataCountry : Array<DataCountry>;
 
@@ -116,7 +115,7 @@ async APISummary(){
   }
   
 private updateDataWorld(){
-    this.firestore.collection("dataWorld").doc("data").set({
+this.firestore.collection("dataWorld").doc("data").set({
     date : this.dataWorld.date,
   	totalCases: this.dataWorld.totalCases,
   	newCases: this.dataWorld.newCases,
@@ -133,11 +132,11 @@ private updateDataWorld(){
  
    getDataWorld(){
        let date = new Date();
+       date.setDate(date.getDate() - 1);
        let latest_date= this.datepipe.transform(date, 'yyy-MM-dd');
-       
-       if(this.dataWorld == null || this.date_latest_update != latest_date){
+       let dateUpdate = JSON.parse(localStorage.getItem("dataWorld")).date;
+       if(dateUpdate != latest_date){
       this.APISummary();
-      this.date_latest_update = latest_date;
     }
        this.dataWorld = JSON.parse(localStorage.getItem("dataWorld"));
     return this.dataWorld;
@@ -145,7 +144,8 @@ private updateDataWorld(){
 
 private updateDataCountry(){
    for (var country of this.dataCountry){
-       this.firestore.collection("dataCountry").doc(country["Country"]).set({
+       this.firestore.collection("dataCountry").doc(country["Country"]).set({  
+    country: country.country,
   	totalCases: country.totalCases,
   	newCases: country.newCases,
   	activeCases: country.activeCases,
@@ -161,11 +161,11 @@ private updateDataCountry(){
 
    getDataCountry(){
        let date = new Date();
+       date.setDate(date.getDate() - 1);
        let latest_date= this.datepipe.transform(date, 'yyy-MM-dd');
-       
-       if(this.dataWorld == null || this.date_latest_update != latest_date){
+       let dateUpdate = JSON.parse(localStorage.getItem("dataWorld")).date;
+       if(dateUpdate != latest_date){
       this.APISummary();
-      this.date_latest_update = latest_date;
     }
        this.dataCountry = JSON.parse(localStorage.getItem("dataCountry"));
     return this.dataCountry;

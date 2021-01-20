@@ -14,6 +14,10 @@ import { CovidDataComponent } from './covid-data/covid-data.component';
 import { NewsComponent } from './news/news.component';
 import { AddNewsComponent } from './add-news/add-news.component';
 import { CovidDataCountryComponent } from './covid-data-country/covid-data-country.component';
+import { CommonModule } from '@angular/common';
+import { MatSortModule } from '@angular/material/sort';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { ChartsModule } from 'ng2-charts';
 
 
 
@@ -24,7 +28,7 @@ import { CovidDataCountryComponent } from './covid-data-country/covid-data-count
     CovidDataComponent,
     NewsComponent,
     AddNewsComponent,
-    CovidDataCountryComponent
+    CovidDataCountryComponent,
   ],
   imports: [
     BrowserModule,
@@ -32,7 +36,11 @@ import { CovidDataCountryComponent } from './covid-data-country/covid-data-count
     AppRoutingModule,
  AngularFireModule.initializeApp(environment.firebaseConfig),
     AngularFirestoreModule,
-    HttpClientModule
+    HttpClientModule,
+    CommonModule,
+    MatSortModule,
+    BrowserAnimationsModule,
+    ChartsModule
   ],
   providers: [DatePipe],
   bootstrap: [AppComponent]

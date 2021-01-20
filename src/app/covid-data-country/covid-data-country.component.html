@@ -14,15 +14,15 @@
         <td>Active cases</td>
         <td>{{dataC.activeCases}}</td>
       </tr>
-      <tr class= table-info>
+      <tr class= table-primary>
         <td>Total Recovered</td>
                 <td>{{dataC.totalRecovered}}</td>
               </tr>
-      <tr class= table-info>
+      <tr class= table-primary>
         <td>New Recovered</td>
                 <td>{{dataC.newRecovered}}</td>
               </tr>
-      <tr class= table-info>
+      <tr class= table-primary>
         <td>Recovery Rate</td>
                 <td>{{dataC.recoveryRate}} %</td>
       </tr>
@@ -43,6 +43,13 @@
   </table>
   </div>
 
-  <div>
-  <canvas id = "pieChart"></canvas>
-  </div>
+<div style="display: block;">
+  <canvas baseChart
+    [data]="pieChartData"
+    [labels]="pieChartLabels"
+    [chartType]="pieChartType"
+    [options]="pieChartOptions"
+    [plugins]="pieChartPlugins"
+    [legend]="pieChartLegend">
+  </canvas>
+</div>
