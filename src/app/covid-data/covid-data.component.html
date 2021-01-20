@@ -54,6 +54,30 @@
   </canvas>
 </div>
 
+
+<div class="chart-wrapper">
+    <canvas baseChart 
+            [datasets]="barChartData"
+            [labels]="barChartLabels"
+            [options]="barChartOptions"
+            [plugins]="barChartPlugins"
+            [legend]="barChartLegend"
+            [chartType]="barChartType">
+    </canvas>
+</div>
+
+<div class="chart-wrapper">
+    <canvas baseChart 
+        [datasets]="lineChartData" 
+        [labels]="lineChartLabels" 
+        [options]="lineChartOptions"
+        [colors]="lineChartColors" 
+        [legend]="lineChartLegend" 
+        [chartType]="lineChartType" 
+        [plugins]="lineChartPlugins">
+    </canvas>
+</div>
+
 <div class="my-3" *ngIf="sortedData && sortedData.length > 0">
   <table class="table table-bordered table-striped" matSort (matSortChange)="sortData($event)">
     <thead>
