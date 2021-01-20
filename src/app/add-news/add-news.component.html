@@ -1,44 +1,28 @@
 <h4>Add the latest news</h4>
-<form (ngSubmit)="addNews()">
-  <div class="row mb-3">
-    <div class="col-md-6">
-      <label for="dateInput">Date</label>
-      <input
-        type="date"
-        id="dateInput"
-        name="dateInput"
-        class="form-control"
-        [(ngModel)]="date"
-        required
-      />
-    </div>
-    <div class="col-md-6">
-      <label for="amountInput">Country</label>
-      <input
-        type="text"
-        id="countryInput"
-        name="countryInput"
-        class="form-control"
-        placeholder="In which country?"
+<form (ngSubmit)="addN()">
+    <div class="col-md-6 form-group">
+        <label for="countryInput">Country</label>
+        <select class="form-control" id="country" required 
         [(ngModel)]="country"
-        required
-      />
+        name="countryInput"
+        placeholder="Country">
+            <option *ngFor="let c of countries" [value]="c">{{c}}</option>
+        </select>
     </div>
-  </div>
-  <div class="row mb-3">
-    <div class="col-12">
-      <label for="descriptionInput">Description</label>
-      <input
-        type="text"
-        id="descriptionInput"
-        name="descriptionInput"
-        class="form-control"
-        placeholder="What are the news?"
-        [(ngModel)]="descrip"
-        required
-      />
+    <div class="row mb-3">
+        <div class="col-12">
+            <label for="descriptionInput">Description</label>
+            <input
+                   type="text"
+                   id="descriptionInput"
+                   name="descriptionInput"
+                   class="form-control"
+                   placeholder="What are the news?"
+                   [(ngModel)]="descrip"
+                   required
+                   />
+        </div>
     </div>
-  </div>
-  <button class="btn btn-primary">Add</button>
+    <button class="btn btn-primary">Add</button>
 </form>
 

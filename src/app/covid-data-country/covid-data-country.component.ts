@@ -67,7 +67,7 @@ this.barChartData= [
 this.lineChartData = [
     { data: [85, 72, 78, 75, 77, 75], label: 'Total Deaths' },
     { data: [85, 32, 78, 78, 77, 15], label: 'Total Recovered' },
-    { data: [85, 72, 32, 40, 77, 75], label: 'Total Cases' },
+    { data: [85, 72, 32, 40, 77, 75], label: 'Total Cases' }
 ];
 
 }

@@ -10,7 +10,7 @@ import { DataCountry } from './dataCountry.model';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { DataWorld } from './dataWorld.model';
-import { DatePipe } from '@angular/common'
+import { DatePipe } from '@angular/common';
 
 
 @Injectable({
@@ -171,10 +171,19 @@ private updateDataCountry(){
     return this.dataCountry;
   }
 
+
 goToCountry(c : String){
         this.router.navigate(['country/', c], {queryParams: {name: c}});
         }
 
+getCountriesNames(){
+    var countries = [];
+    this.dataCountry = this.getDataCountry();
+    for (var c of this.dataCountry){
+        countries.push(c.country);
+    }
+    return countries;
+}
 
 getDataOneCountry(c : String){
     this.dataCountry = this.getDataCountry();
@@ -204,18 +213,6 @@ getSummaryCountryConfirmed(c : String){
         })});
    return news;
   }*/
-
-  /*public getCountryData(): Observable<DataCountry[]>{
-    return this.http.get('https://api.covid19api.com/summary').pipe(
-      map(
-        (jsonArray: Object[]) => jsonArray.map(jsonItem => DataCountry.fromJson(jsonItem))
-      )
-    );
-  }*/
-  
-
-  
-
 
 
 }
