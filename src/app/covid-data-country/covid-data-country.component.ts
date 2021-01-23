@@ -5,6 +5,7 @@ import { News } from '../news.model';
 import { ActivatedRoute } from '@angular/router';
 import { ChartType, ChartOptions, ChartDataSets } from 'chart.js';
 import { SingleDataSet, Label, monkeyPatchChartJsLegend, monkeyPatchChartJsTooltip } from 'ng2-charts';
+import { DataDaily } from '../dataDaily.model';
 
 @Component({
     selector: 'app-covid-data-country',
@@ -14,8 +15,10 @@ import { SingleDataSet, Label, monkeyPatchChartJsLegend, monkeyPatchChartJsToolt
 export class CovidDataCountryComponent implements OnInit {
     news : News[];
 private sub: any;
-name : String;
+name : string;
 dataC: DataCountry;
+dataCountryDaily: DataDaily;
+dataCountryDailyTotal: DataDaily;
 
 public pieChartOptions: ChartOptions = {
     responsive: true,
@@ -56,21 +59,36 @@ ngOnInit(): void {
     this.name = params.get('name');
 })
 
-this.dataC = this.covidService.getDataOneCountry(this.name);
+this.covidService.getDataCountry(this.name).subscribe(
+    (res: DataCountry) =>                                    
+    {this.dataC = res;                         
+     this.pieChartData =  [this.dataC.totalDeaths, this.dataC.totalRecovered, this.dataC.activeCases];
+    });
 
-this.pieChartData =  [this.dataC.totalDeaths, this.dataC.totalRecovered, this.dataC.activeCases];
 
-this.barChartData= [
-    { data: [45, 37, 60, 70, 46, 33], label: 'Daily Deaths' }, { data: [45, 37, 60, 70, 46, 33], label: 'Daily Recovered' },{ data: [45, 37, 60, 70, 46, 33], label: 'Daily New Cases' }
-];
-
-this.lineChartData = [
-    { data: [85, 72, 78, 75, 77, 75], label: 'Total Deaths' },
-    { data: [85, 32, 78, 78, 77, 15], label: 'Total Recovered' },
-    { data: [85, 72, 32, 40, 77, 75], label: 'Total Cases' }
-];
+this.dailyDataPlots();
 
 }
+
+async dailyDataPlots(){
+    let dataCountryD = await this.covidService.getDataCountryDaily(this.name);
+    this.dataCountryDaily = dataCountryD[0];
+    this.barChartData= [
+
+    { data: this.dataCountryDaily.deaths, label: 'Daily Deaths' }, { data: 
+    this.dataCountryDaily.recovered, label: 'Daily Recovered' },{ data: this.dataCountryDaily.cases, label: 'Daily New Cases' }
+];
+     this.barChartLabels= this.dataCountryDaily.dates;
+    
+    this.dataCountryDailyTotal = dataCountryD[1];
+    this.lineChartData = [
+    { data: this.dataCountryDailyTotal.deaths, label: 'Total Deaths' },
+    { data: this.dataCountryDailyTotal.recovered, label: 'Total Recovered' },
+    { data: this.dataCountryDailyTotal.cases, label: 'Total Cases' }
+];
+    this.lineChartLabels = this.dataCountryDailyTotal.dates;   
+} 
+
 
 
 }

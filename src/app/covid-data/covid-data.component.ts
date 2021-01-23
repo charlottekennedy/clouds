@@ -5,9 +5,11 @@ import { User } from '../user.model';
 import { News } from '../news.model';
 import { DataCountry } from '../dataCountry.model';
 import { DataWorld } from '../dataWorld.model';
+import { DataDaily } from '../dataDaily.model';
 import { Sort } from '@angular/material/sort';
 import { ChartType, ChartOptions, ChartDataSets } from 'chart.js';
 import { SingleDataSet, Label, monkeyPatchChartJsLegend, monkeyPatchChartJsTooltip } from 'ng2-charts';
+import { DatePipe } from '@angular/common';
 
 @Component({
     selector: 'app-covid-data',
@@ -20,9 +22,14 @@ export class CovidDataComponent implements OnInit {
 
     news: News[];
 user: User;
-dataCountry: Array<DataCountry>;
+dataCountry: DataCountry[];
 dataWorld : DataWorld;
-sortedData: Array<DataCountry>;
+dataWorldDaily: DataDaily;
+dataWorldDailyTotal: DataDaily;
+sortedData: DataCountry[];
+namesCountry: string[];
+barChartLabels: Label[];
+lineChartLabels: Label[]
 
 
 public pieChartOptions: ChartOptions = {
@@ -37,7 +44,7 @@ public pieChartPlugins = [];
 barChartOptions: ChartOptions = {
     responsive: true,
 };
-barChartLabels: Label[] = ['Apple', 'Banana', 'Kiwifruit', 'Blueberry', 'Orange', 'Grapes'];
+
 barChartType: ChartType = 'bar';
 barChartLegend = true;
 barChartPlugins = [];
@@ -45,7 +52,6 @@ barChartData: ChartDataSets[];
 
 
 lineChartData: ChartDataSets[]; 
-lineChartLabels: Label[] = ['January', 'February', 'March', 'April', 'May', 'June'];
 lineChartOptions = {
     responsive: true,
 };
@@ -53,7 +59,7 @@ lineChartLegend = true;
 lineChartPlugins = [];
 lineChartType = 'line';
 
-constructor(public covidService : CovidService) { 
+constructor(public covidService : CovidService, public datepipe: DatePipe) { 
     monkeyPatchChartJsTooltip();
     monkeyPatchChartJsLegend();
 }
@@ -67,22 +73,40 @@ ngOnInit(): void {
   		this.news = news;
   	});*/
 
-    this.dataWorld = this.covidService.getDataWorld();
-    this.dataCountry = this.covidService.getDataCountry();
-    this.sortedData = this.dataCountry;
-
+this.covidService.getDataWorld().subscribe((res: DataWorld) => {
+    this.dataWorld = res;
     this.pieChartData =  [this.dataWorld.totalDeaths, this.dataWorld.totalRecovered, this.dataWorld.activeCases];
+});
 
+this.dailyDataPlots();
+this.getDataC();
+
+
+this.covidService.getNewsCountry("WorldWide").subscribe((news : News[]) => {this.news = news;} );
+}
+
+async dailyDataPlots(){
+    let dataWorldD = await this.covidService.getDataWorldDaily();
+    this.dataWorldDaily = dataWorldD[0];
     this.barChartData= [
-    { data: [45, 37, 60, 70, 46, 33], label: 'Daily Deaths' }, { data: [45, 37, 60, 70, 46, 33], label: 'Daily Recovered' },{ data: [45, 37, 60, 70, 46, 33], label: 'Daily New Cases' }
-];
 
-this.lineChartData = [
-    { data: [85, 72, 78, 75, 77, 75], label: 'Total Deaths' },
-    { data: [85, 32, 78, 78, 77, 15], label: 'Total Recovered' },
-    { data: [85, 72, 32, 40, 77, 75], label: 'Total Cases' }
+    { data: this.dataWorldDaily.deaths, label: 'Daily Deaths' }, { data: 
+    this.dataWorldDaily.recovered, label: 'Daily Recovered' },{ data: this.dataWorldDaily.cases, label: 'Daily New Cases' }
 ];
+     this.barChartLabels= this.dataWorldDaily.dates;
+    
+    this.dataWorldDailyTotal = dataWorldD[1];
+    this.lineChartData = [
+    { data: this.dataWorldDailyTotal.deaths, label: 'Total Deaths' },
+    { data: this.dataWorldDailyTotal.recovered, label: 'Total Recovered' },
+    { data: this.dataWorldDailyTotal.cases, label: 'Total Cases' }
+];
+    this.lineChartLabels = this.dataWorldDailyTotal.dates;   
+} 
 
+async getDataC(){
+    this.dataCountry = await this.covidService.getDataCountriesAPI();
+    this.sortedData = this.dataCountry;
 }
 
 
@@ -108,10 +132,14 @@ sortData(sort: Sort){
         }
     });
 }
+ 
 }
 
 function compare(a: number | string, b: number | string, isAsc: boolean){
     return (a < b ? -1 : 1) * (isAsc ? 1 : -1);
 }
+
+  
+
 
 

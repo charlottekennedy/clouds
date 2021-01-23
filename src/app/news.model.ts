@@ -1,9 +1,10 @@
 export class News{
-  date: String;
-  descrip: String;
-  country: String;
+    nid: string;
+  date: string;
+  descrip: string;
+  country: string;
   
-  constructor(date: String, descrip: String, country: String){
+  constructor(date: string, descrip: string, country: string){
     this.date = date;
     this.descrip = descrip;
     this.country = country;

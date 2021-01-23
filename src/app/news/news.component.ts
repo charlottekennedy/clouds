@@ -18,9 +18,8 @@ constructor(public covidService : CovidService) { }
 
 ngOnInit(): void {
     this.user = this.covidService.getUser();
-    this.covidService.getNews().subscribe((news: News[])=>{
-    this.news = news;
-});
+    this.news = this.covidService.getNewsUser(this.user.uid);
+}
 }
 
-}
+

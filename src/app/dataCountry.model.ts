@@ -1,4 +1,5 @@
 export interface DataCountry{
+    date: string;
 	country: string;
 	totalCases: number;
 	newCases: number;

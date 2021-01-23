@@ -10,27 +10,30 @@ import { DatePipe } from '@angular/common';
 })
 export class AddNewsComponent implements OnInit {
 
-descrip: String;
-country: String;
-countries: Array<String>;
+descrip: string;
+country: string;
+countries: Array<string>;
 
 
 constructor(private covidService: CovidService,  public datepipe: DatePipe) { }
 
 ngOnInit(): void {
+
     this.countries = this.covidService.getCountriesNames();
     this.countries.push("Worldwide");
+    
 }
 
 addN(){
     let date = new Date();
     let latest_date= this.datepipe.transform(date, 'yyyy-MM-dd');
-    let news_item: News = {
+    let newsItem: News = {
+        nid: this.covidService.getUser().uid + date.toDateString(),
         date: latest_date,
         descrip: this.descrip,
-        country: this.country
+        country: this.country,
     };
-    this.covidService.addNews(news_item);
+    this.covidService.addNews(newsItem);
     this.descrip = undefined;
     this.country= undefined;
 }
