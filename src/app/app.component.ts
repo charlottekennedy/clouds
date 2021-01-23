@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { CovidService } from './covid.service';
 
 @Component({
   selector: 'app-root',
@@ -8,4 +9,11 @@ import { Component } from '@angular/core';
 export class AppComponent {
   title = 'covid';
 
+signedIn : boolean = false;
+
+constructor(public covidService : CovidService) { }
+
+ngOnInit(): void {
+this.signedIn = this.covidService.userSignedIn();
+}
 }

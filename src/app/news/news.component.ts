@@ -11,14 +11,23 @@ import { News } from '../news.model';
 export class NewsComponent implements OnInit {
 
     user: User;
-    news: News[];
+news: Array<News>;
 
 
 constructor(public covidService : CovidService) { }
 
 ngOnInit(): void {
+    this.news=[];
     this.user = this.covidService.getUser();
-    this.news = this.covidService.getNewsUser(this.user.uid);
+    let newsC = this.covidService.getNewsUser(this.user.displayName);
+    for (var newItem of newsC){
+    newItem.subscribe(
+    (res : News[]) => {
+    for (var n of res){
+    this.news.push(n);
+}
+});
+}
 }
 }
 

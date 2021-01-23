@@ -114,21 +114,20 @@
         <thead>
             <tr>
                 <th>Date</th>
-                <th>User</th>
+                <th>Author</th>
                 <th>Description</th>
             </tr>
         </thead>
         <tbody>
             <tr *ngFor="let news_item of news">
-                <td>{{ news_item.date.toDate() | date }}</td>
-                <td>{{ news_item.user }}</td>
-                <td>{{ news_item.description }}</td>
+                <td>{{ news_item.date }}</td>
+                <td>{{ news_item.writer }}</td>
+                <td>{{ news_item.descrip }}</td>
             </tr>
         </tbody>
     </table>
     <p class="font-italic">Last Updated: {{ lastUpdated?.toDate() | date }}</p>
 </div>
 
-<a href= "signin" target="_blank"><input type="button" value= "Sign in"></a>
-<a href= "news" target="_blank"><input type="button" value= "Add News"></a>
+<a href= "news" >Add News</a>
 

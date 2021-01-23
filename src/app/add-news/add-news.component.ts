@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { News } from '../news.model';
+import { User } from '../user.model';
 import { CovidService } from '../covid.service';
 import { DatePipe } from '@angular/common';
 
@@ -13,6 +14,7 @@ export class AddNewsComponent implements OnInit {
 descrip: string;
 country: string;
 countries: Array<string>;
+user: User;
 
 
 constructor(private covidService: CovidService,  public datepipe: DatePipe) { }
@@ -26,10 +28,11 @@ ngOnInit(): void {
 
 addN(){
     let date = new Date();
-    let latest_date= this.datepipe.transform(date, 'yyyy-MM-dd');
+    let latestDate= this.datepipe.transform(date, 'yyyy-MM-dd');
+    this.user = this.covidService.getUser();
     let newsItem: News = {
-        nid: this.covidService.getUser().uid + date.toDateString(),
-        date: latest_date,
+        date: latestDate,
+        writer : this.user.displayName,
         descrip: this.descrip,
         country: this.country,
     };

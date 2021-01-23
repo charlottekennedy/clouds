@@ -1,5 +1,5 @@
 export class News{
-    nid: string;
+    writer: string;
   date: string;
   descrip: string;
   country: string;

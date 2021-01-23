@@ -19,6 +19,8 @@ name : string;
 dataC: DataCountry;
 dataCountryDaily: DataDaily;
 dataCountryDailyTotal: DataDaily;
+barChartLabels: Label[];
+lineChartLabels: Label[];
 
 public pieChartOptions: ChartOptions = {
     responsive: true,
@@ -33,7 +35,7 @@ public pieChartPlugins = [];
 barChartOptions: ChartOptions = {
     responsive: true,
 };
-barChartLabels: Label[] = ['Apple', 'Banana', 'Kiwifruit', 'Blueberry', 'Orange', 'Grapes'];
+
 barChartType: ChartType = 'bar';
 barChartLegend = true;
 barChartPlugins = [];
@@ -41,7 +43,6 @@ barChartData: ChartDataSets[];
 
 
 lineChartData: ChartDataSets[]; 
-lineChartLabels: Label[] = ['January', 'February', 'March', 'April', 'May', 'June'];
 lineChartOptions = {
     responsive: true,
 };
@@ -61,12 +62,16 @@ ngOnInit(): void {
 
 this.covidService.getDataCountry(this.name).subscribe(
     (res: DataCountry) =>                                    
-    {this.dataC = res;                         
+    {
+        this.dataC = res;                     
      this.pieChartData =  [this.dataC.totalDeaths, this.dataC.totalRecovered, this.dataC.activeCases];
     });
 
 
 this.dailyDataPlots();
+
+this.covidService.getNewsCountry(this.name).subscribe((res: News[]) => {this.news = res;
+                                                                       console.log(this.news);});
 
 }
 

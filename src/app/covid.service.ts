@@ -75,19 +75,14 @@ getNewsCountry(c: string){
         .doc(c).collection("newsC", ref => ref.orderBy('date', 'asc')).valueChanges();
 }
 
-getNewsUser(uid : string){
-    let news = [];
-    let countries = this.getCountriesNames();
+getNewsUser(name: string){
+   let newsC=[]; 
+   let countries = this.getCountriesNames();
     for (var c of countries){
-        this.firestore.collection("news")
-            .doc(c).collection("newsC").valueChanges().subscribe(responses => {
-            for(var res of responses){
-                if (res.nid == uid){
-                    news.push(res);
-                }
-            }
-        });}
-    return news;
+ newsC.push(this.firestore.collection("news").doc(c).collection("newsC").valueChanges());
+    }
+    newsC.push(this.firestore.collection("news").doc("Worldwide").collection("newsC").valueChanges());
+    return newsC;
 }
 
 
@@ -308,22 +303,6 @@ async getDataCountryDaily(c: string){
     return [this.dataCountryDaily, this.dataCountryDailyTotal];
 }
 
-
-
-
-/*async updateDailyCountry(c : String){
-    let dailyData = await this.getSummaryCountryDaily(c);
-
-    this.firestore.collection("dataCountryDaily").doc(c).collection("daily").doc("data").get()
-    let mostRecentDate = ;
-     this.firestore.collection("dataCountryDaily").doc(c).collection("daily").set({
-         country: c,
-         date: 
-
-    this.firestore.collection("dataCountryDaily").doc(c).collection("sinceApril2020").set({
-         country: c,
-         date: 
-})}*/
 
 goToCountry(c : string){
     this.router.navigate(['country/', c], {queryParams: {name: c}});

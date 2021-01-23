@@ -29,7 +29,7 @@ dataWorldDailyTotal: DataDaily;
 sortedData: DataCountry[];
 namesCountry: string[];
 barChartLabels: Label[];
-lineChartLabels: Label[]
+lineChartLabels: Label[];
 
 
 public pieChartOptions: ChartOptions = {
@@ -82,7 +82,7 @@ this.dailyDataPlots();
 this.getDataC();
 
 
-this.covidService.getNewsCountry("WorldWide").subscribe((news : News[]) => {this.news = news;} );
+this.covidService.getNewsCountry("Worldwide").subscribe((news : News[]) => {this.news = news;} );
 }
 
 async dailyDataPlots(){

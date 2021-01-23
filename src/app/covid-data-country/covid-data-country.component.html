@@ -1,3 +1,6 @@
+
+<a href= "covid-data"> Return to homepage></a>
+
 <div class="my-3">
     <table class="table table-bordered ">
         <caption> Corona Virus Summary in {{ name }}</caption>
@@ -74,4 +77,23 @@
         [chartType]="lineChartType" 
         [plugins]="lineChartPlugins">
     </canvas>
+</div>
+
+<div class="my-3" *ngIf="news && news.length > 0">
+  <table class="table table-bordered table-striped">
+    <thead>
+      <tr>
+        <th>Date</th>
+        <th>Author</th>
+        <th>Country</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let news_item of news">
+        <td>{{ news_item.date }}</td>
+        <td>{{ news_item.writer}}</td>
+        <td>{{ news_item.descrip }}</td>
+      </tr>
+    </tbody>
+  </table>
 </div>
