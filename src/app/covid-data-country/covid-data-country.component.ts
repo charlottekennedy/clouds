@@ -6,6 +6,10 @@ import { ActivatedRoute } from '@angular/router';
 import { ChartType, ChartOptions, ChartDataSets } from 'chart.js';
 import { SingleDataSet, Label, monkeyPatchChartJsLegend, monkeyPatchChartJsTooltip } from 'ng2-charts';
 import { DataDaily } from '../dataDaily.model';
+import { CommonModule } from '@angular/common';
+import { BrowserModule } from '@angular/platform-browser';
+import { Router } from '@angular/router';
+
 
 @Component({
     selector: 'app-covid-data-country',
@@ -21,6 +25,7 @@ dataCountryDaily: DataDaily;
 dataCountryDailyTotal: DataDaily;
 barChartLabels: Label[];
 lineChartLabels: Label[];
+signedIn: boolean;
 
 public pieChartOptions: ChartOptions = {
     responsive: true,
@@ -52,7 +57,7 @@ lineChartPlugins = [];
 lineChartType = 'line';
 
 
-constructor(private route: ActivatedRoute, public covidService : CovidService) { }
+constructor(private route: ActivatedRoute, public covidService : CovidService, private router: Router) { }
 
 ngOnInit(): void {
 
@@ -70,9 +75,19 @@ this.covidService.getDataCountry(this.name).subscribe(
 
 this.dailyDataPlots();
 
-this.covidService.getNewsCountry(this.name).subscribe((res: News[]) => {this.news = res;
-                                                                       console.log(this.news);});
+this.covidService.getNewsCountry(this.name).subscribe(
+    (res: News[]) => {this.news = res;});
+}
 
+async login(){
+    this.signedIn = this.covidService.userSignedIn();
+    if (this.signedIn){
+        this.router.navigate(["news"]);
+    }
+    else {
+        await this.covidService.signInWithGoogle();
+        this.signedIn = true;
+    }
 }
 
 async dailyDataPlots(){

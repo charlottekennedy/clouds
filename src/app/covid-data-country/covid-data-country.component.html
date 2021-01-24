@@ -1,52 +1,62 @@
+<div class="text-center p-1 bg-dark text-white" >
+    <a href= "covid-data" class = "text-primary font-weight-bold"> Worldwide </a> <b>></b>
+    {{ name }}
+</div>
 
-<a href= "covid-data"> Return to homepage></a>
+
+<div class=" p-2 bg-light font-weight-bold" >
+Corona Virus Summary in {{ name }}
+</div>
 
 <div class="my-3">
-    <table class="table table-bordered ">
-        <caption> Corona Virus Summary in {{ name }}</caption>
+    <table class="table table-bordered">
         <tbody>
             <tr class= table-warning>
                 <td>Total Cases</td>
-                <td>{{dataC.totalCases}}</td>
+                <td>{{dataC?.totalCases}}</td>
             </tr>
             <tr class= table-warning>
                 <td>New Cases</td>
-                <td>{{dataC.newCases}}</td>
+                <td>{{dataC?.newCases}}</td>
             </tr>
             <tr class= table-warning>
                 <td>Active cases</td>
-                <td>{{dataC.activeCases}}</td>
+                <td>{{dataC?.activeCases}}</td>
             </tr>
             <tr class= table-primary>
                 <td>Total Recovered</td>
-                <td>{{dataC.totalRecovered}}</td>
+                <td>{{dataC?.totalRecovered}}</td>
             </tr>
             <tr class= table-primary>
                 <td>New Recovered</td>
-                <td>{{dataC.newRecovered}}</td>
+                <td>{{dataC?.newRecovered}}</td>
             </tr>
             <tr class= table-primary>
                 <td>Recovery Rate</td>
-                <td>{{dataC.recoveryRate}} %</td>
+                <td>{{dataC?.recoveryRate}} %</td>
             </tr>
             <tr class= table-danger>
                 <td>Total Death</td>
-                <td>{{dataC.totalDeaths}}</td>
+                <td>{{dataC?.totalDeaths}}</td>
             </tr>
             <tr class= table-danger>
                 <td>New Deaths</td>
-                <td>{{dataC.newDeaths}}</td>
+                <td>{{dataC?.newDeaths}}</td>
             </tr>
             <tr class= table-danger>
                 <td>Mortality rate</td>
-                <td>{{dataC.mortalityRate}} %</td>
+                <td>{{dataC?.mortalityRate}} %</td>
             </tr>
 
         </tbody>
     </table>
 </div>
 
-<div style="display: block;">
+<div id="country" class=" p-2 bg-light font-weight-bold" >
+Corona Virus Cases Distribution in {{name}}
+</div>
+
+<div style="display: block;" *ngIf="pieChartData">
     <canvas baseChart
             [data]="pieChartData"
             [labels]="pieChartLabels"
@@ -57,7 +67,9 @@
     </canvas>
 </div>
 
-<div class="chart-wrapper">
+Daily Corona Virus Cases in {{name}}
+
+<div class="chart-wrapper" *ngIf="barChartData">
     <canvas baseChart 
             [datasets]="barChartData"
             [labels]="barChartLabels"
@@ -68,32 +80,36 @@
     </canvas>
 </div>
 
-<div class="chart-wrapper">
+Total Corona Virus in {{name}}
+
+<div class="chart-wrapper" *ngIf="lineChartData">
     <canvas baseChart 
-        [datasets]="lineChartData" 
-        [labels]="lineChartLabels" 
-        [options]="lineChartOptions"
-        [legend]="lineChartLegend" 
-        [chartType]="lineChartType" 
-        [plugins]="lineChartPlugins">
+            [datasets]="lineChartData" 
+            [labels]="lineChartLabels" 
+            [options]="lineChartOptions"
+            [legend]="lineChartLegend" 
+            [chartType]="lineChartType" 
+            [plugins]="lineChartPlugins">
     </canvas>
 </div>
 
 <div class="my-3" *ngIf="news && news.length > 0">
-  <table class="table table-bordered table-striped">
-    <thead>
-      <tr>
-        <th>Date</th>
-        <th>Author</th>
-        <th>Country</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr *ngFor="let news_item of news">
-        <td>{{ news_item.date }}</td>
-        <td>{{ news_item.writer}}</td>
-        <td>{{ news_item.descrip }}</td>
-      </tr>
-    </tbody>
-  </table>
+    <table class="table table-bordered table-striped">
+        <thead>
+            <tr>
+                <th>Date</th>
+                <th>Author</th>
+                <th>Country</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr *ngFor="let news_item of news">
+                <td>{{ news_item.date }}</td>
+                <td>{{ news_item.writer}}</td>
+                <td>{{ news_item.descrip }}</td>
+            </tr>
+        </tbody>
+    </table>
 </div>
+
+<button (click)= "login()" >Add News</button>

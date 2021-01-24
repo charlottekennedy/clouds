@@ -1,53 +1,65 @@
-<div class="boxed">
-  This text is enclosed in a box.
+<div class="text-center p-1 bg-dark text-white" >
+    <a href= "covid-data" class = "text-primary font-weight-bold"></a>
+        <a href = "#general" class = "text-primary font-weight-bold">Worldwide statistics</a><b>  .  </b>
+    <a href = "#country" class = "text-primary font-weight-bold">Country statistics</a>
+    <b>  .  </b>
+    <a href = "#newsW" class = "text-primary font-weight-bold">News</a>
+</div>
+
+
+<div id="general" class=" p-2 bg-light font-weight-bold" >
+Corona Virus Summary Worldwide
 </div>
 
 <div class="my-3">
     <table class="table table-bordered ">
-        <caption> Corona Virus Summary Worldwide </caption>
         <tbody>
             <tr class= table-warning>
                 <td>Total Cases</td>
-                <td>{{dataWorld.totalCases}}</td>
+                <td>{{dataWorld?.totalCases}}</td>
             </tr>
             <tr class= table-warning>
                 <td>New Cases</td>
-                <td>{{dataWorld.newCases}}</td>
+                <td>{{dataWorld?.newCases}}</td>
             </tr>
             <tr class= table-warning>
                 <td>Active cases</td>
-                <td>{{dataWorld.activeCases}}</td>
+                <td>{{dataWorld?.activeCases}}</td>
             </tr>
             <tr class= table-primary>
                 <td>Total Recovered</td>
-                <td>{{dataWorld.totalRecovered}}</td>
+                <td>{{dataWorld?.totalRecovered}}</td>
             </tr>
             <tr class= table-primary>
                 <td>New Recovered</td>
-                <td>{{dataWorld.newRecovered}}</td>
+                <td>{{dataWorld?.newRecovered}}</td>
             </tr>
             <tr class= table-primary>
                 <td>Recovery Rate</td>
-                <td>{{dataWorld.recoveryRate}} %</td>
+                <td>{{dataWorld?.recoveryRate}} %</td>
             </tr>
             <tr class= table-danger>
                 <td>Total Death</td>
-                <td>{{dataWorld.totalDeaths}}</td>
+                <td>{{dataWorld?.totalDeaths}}</td>
             </tr>
             <tr class= table-danger>
                 <td>New Deaths</td>
-                <td>{{dataWorld.newDeaths}}</td>
+                <td>{{dataWorld?.newDeaths}}</td>
             </tr>
             <tr class= table-danger>
                 <td>Mortality rate</td>
-                <td>{{dataWorld.mortalityRate}} %</td>
+                <td>{{dataWorld?.mortalityRate}} %</td>
             </tr>
 
         </tbody>
     </table>
 </div>
 
-<div style="display: block;">
+<div class=" p-2 bg-light font-weight-bold" >
+Corona Virus Cases Distribution Worldwide
+</div>
+
+<div style="display: block;" *ngIf="pieChartData">
     <canvas baseChart
             [data]="pieChartData"
             [labels]="pieChartLabels"
@@ -58,8 +70,11 @@
     </canvas>
 </div>
 
+<div class=" p-2 bg-light font-weight-bold" >
+Daily Corona Virus Cases WorldWide
+</div>
 
-<div class="chart-wrapper">
+<div class="chart-wrapper" *ngIf="barChartData">
     <canvas baseChart 
             [datasets]="barChartData"
             [labels]="barChartLabels"
@@ -70,7 +85,11 @@
     </canvas>
 </div>
 
-<div class="chart-wrapper">
+<div class=" p-2 bg-light font-weight-bold" >
+Total Corona Virus Cases WorldWide
+</div>
+
+<div class="chart-wrapper" *ngIf="lineChartData">
     <canvas baseChart 
             [datasets]="lineChartData" 
             [labels]="lineChartLabels" 
@@ -81,8 +100,12 @@
     </canvas>
 </div>
 
+<div id="country" class=" p-2 bg-light font-weight-bold" >
+Corona Virus Cases by Country
+</div>
+
 <div class="my-3" *ngIf="sortedData && sortedData.length > 0">
-    <table class="table table-bordered table-striped" matSort (matSortChange)="sortData($event)">
+    <table class="table table-bordered" matSort (matSortChange)="sortData($event)">
         <thead>
             <tr>
                 <th mat-sort-header="country" class= table-secondary>Country</th>
@@ -109,10 +132,14 @@
     </table>
 </div>
 
+<div id="newsW" class=" p-2 bg-light font-weight-bold" >
+Worldwide News
+</div>
+
 <div class="my-3" *ngIf="news && news.length > 0">
     <table class="table table-bordered table-striped">
         <thead>
-            <tr>
+            <tr class = "table-active" >
                 <th>Date</th>
                 <th>Author</th>
                 <th>Description</th>
@@ -126,8 +153,9 @@
             </tr>
         </tbody>
     </table>
-    <p class="font-italic">Last Updated: {{ lastUpdated?.toDate() | date }}</p>
 </div>
 
-<a href= "news" >Add News</a>
+
+<button class = "btn btn-primary" (click)= "login()" >Add News</button>
+
 

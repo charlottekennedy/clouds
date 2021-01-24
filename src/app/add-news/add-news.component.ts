@@ -3,6 +3,8 @@ import { News } from '../news.model';
 import { User } from '../user.model';
 import { CovidService } from '../covid.service';
 import { DatePipe } from '@angular/common';
+import { CommonModule } from '@angular/common';
+import { BrowserModule } from '@angular/platform-browser';
 
 @Component({
     selector: 'app-add-news',

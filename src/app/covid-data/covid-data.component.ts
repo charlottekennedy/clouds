@@ -10,6 +10,9 @@ import { Sort } from '@angular/material/sort';
 import { ChartType, ChartOptions, ChartDataSets } from 'chart.js';
 import { SingleDataSet, Label, monkeyPatchChartJsLegend, monkeyPatchChartJsTooltip } from 'ng2-charts';
 import { DatePipe } from '@angular/common';
+import { CommonModule } from '@angular/common';
+import { BrowserModule } from '@angular/platform-browser';
+import { Router } from '@angular/router';
 
 @Component({
     selector: 'app-covid-data',
@@ -30,6 +33,7 @@ sortedData: DataCountry[];
 namesCountry: string[];
 barChartLabels: Label[];
 lineChartLabels: Label[];
+signedIn:boolean;
 
 
 public pieChartOptions: ChartOptions = {
@@ -59,20 +63,18 @@ lineChartLegend = true;
 lineChartPlugins = [];
 lineChartType = 'line';
 
-constructor(public covidService : CovidService, public datepipe: DatePipe) { 
+constructor(public covidService : CovidService, public datepipe: DatePipe, private router: Router) { 
     monkeyPatchChartJsTooltip();
     monkeyPatchChartJsLegend();
 }
 
 ngOnInit(): void {
-    /*this.covidService.displayNews("worldwide").subscribe((news: News[])=>{
-  		this.news = news;
-  	}); */
+    
+   
     this.user = this.covidService.getUser();
-    /*this.covidService.displayNews().subscribe((news: News[])=>{
-  		this.news = news;
-  	});*/
-
+    
+    this.signedIn = this.covidService.userSignedIn();
+    
 this.covidService.getDataWorld().subscribe((res: DataWorld) => {
     this.dataWorld = res;
     this.pieChartData =  [this.dataWorld.totalDeaths, this.dataWorld.totalRecovered, this.dataWorld.activeCases];
@@ -83,6 +85,17 @@ this.getDataC();
 
 
 this.covidService.getNewsCountry("Worldwide").subscribe((news : News[]) => {this.news = news;} );
+}
+
+async login(){
+    this.signedIn = this.covidService.userSignedIn();
+    if (this.signedIn){
+        this.router.navigate(["news"]);
+    }
+    else {
+        await this.covidService.signInWithGoogle();
+        this.signedIn = true;
+    }
 }
 
 async dailyDataPlots(){
@@ -111,7 +124,6 @@ async getDataC(){
 
 
 sortData(sort: Sort){
-    this.sortedData = this.dataCountry.slice();
     const data = this.dataCountry.slice();
     if (!sort.active || sort.direction === ''){
         this.sortedData = data;
@@ -122,12 +134,12 @@ sortData(sort: Sort){
         const isAsc = sort.direction === 'asc';
         switch (sort.active){
             case 'country': return compare(a.country, b.country, isAsc);
-            case 'newCases': return compare(a.totalCases, b.totalCases, isAsc);
+            case 'newCases': return compare(a.newCases, b.newCases, isAsc);
             case 'totalCases': return compare(a.totalCases, b.totalCases, isAsc);
-            case 'newRecovered': return compare(a.totalCases, b.totalCases, isAsc);
-            case 'totalRecovered': return compare(a.totalCases, b.totalCases, isAsc);
-            case 'newDeaths': return compare(a.totalCases, b.totalCases, isAsc);
-            case 'totalDeaths': return compare(a.totalCases, b.totalCases, isAsc);
+            case 'newRecovered': return compare(a.newRecovered, b.newRecovered, isAsc);
+            case 'totalRecovered': return compare(a.totalRecovered, b.totalRecovered, isAsc);
+            case 'newDeaths': return compare(a.newDeaths, b.newDeaths, isAsc);
+            case 'totalDeaths': return compare(a.totalDeaths, b.totalDeaths, isAsc);
             default: return 0;
         }
     });

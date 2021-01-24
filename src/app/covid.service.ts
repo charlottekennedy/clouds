@@ -249,14 +249,15 @@ async getDataCountryDaily(c: string){
     let deaths = [];
     let recovered = [];
 
-    for (let i of summDaily){
-        dates.push(i["Date"].slice(0, 10));
-        cases.push(i["Confirmed"]);
-        deaths.push(i["Deaths"]);
-        recovered.push(i["Recovered"]);
+    let n = Object.keys(summDaily).length;
+    for (let i=0; i<n; i++){
+        dates.push(summDaily[i]["Date"].slice(0, 10));
+        cases.push(summDaily[i]["Confirmed"]);
+        deaths.push(summDaily[i]["Deaths"]);
+        recovered.push(summDaily[i]["Recovered"]);
     }
 
-    let dataCountryDaily = {
+    let dataCountryDailyTotal = {
         dates: dates,
         cases: cases,
         deaths: deaths,
@@ -264,40 +265,40 @@ async getDataCountryDaily(c: string){
     }
 
 
-    let casesT = [];
-    let deathsT = [];
-    let recoveredT = [];
-    let ca = dataCountryDaily.cases;
-    let de = dataCountryDaily.deaths;
-    let re = dataCountryDaily.recovered;
-    let cptCases = 0;
-    let cptDeaths = 0;
-    let cptRecovered = 0;
-    let index = dataCountryDaily.dates.indexOf("2020-04-20");
-    let cpt = index;
+    let casesD = [];
+    let deathsD = [];
+    let recoveredD = [];
+    let ca = dataCountryDailyTotal.cases;
+    let de = dataCountryDailyTotal.deaths;
+    let re = dataCountryDailyTotal.recovered;
+    let cptCases = dataCountryDailyTotal.cases[n];
+    let cptDeaths = dataCountryDailyTotal.deaths[n];
+    let cptRecovered = dataCountryDailyTotal.recovered[n];
+    let index = dataCountryDailyTotal.dates.indexOf("2020-04-20");
+    let cpt = n-1;
 
-    while(dataCountryDaily.dates[cpt]!= dataCountryDaily.dates[-1]){
-        cptCases += ca[cpt];
-        casesT.push(cptCases);
-        cptDeaths += de[cpt];
-        deathsT.push(cptDeaths);
-        cptRecovered += re[cpt];
-        recoveredT.push(cptRecovered);
-        cpt+=1
+    while (cpt >= n-8){
+        cptCases = ca[cpt] - ca[cpt-1];
+        casesD.push(cptCases);
+        cptDeaths = de[cpt] - de[cpt-1];
+        deathsD.push(cptDeaths);
+        cptRecovered = re[cpt] - re[cpt-1];
+        recoveredD.push(cptRecovered);
+        cpt-=1;
     }
 
     this.dataCountryDailyTotal = {
-        dates : dataCountryDaily.dates.slice(index ,cpt +1),
-        cases: casesT,
-        deaths: deathsT,
-        recovered: recoveredT
+        dates : dataCountryDailyTotal.dates.slice(index ,n),
+        cases: dataCountryDailyTotal.cases.slice(index, n),
+        deaths: dataCountryDailyTotal.deaths.slice(index, n),
+        recovered: dataCountryDailyTotal.recovered.slice(index, n)
     }
 
     this.dataCountryDaily = {
-        dates: dataCountryDaily.dates.slice(Math.max(dataCountryDaily.dates.length - 7, 0)),
-        cases: dataCountryDaily.cases.slice(Math.max(dataCountryDaily.cases.length - 7, 0)),
-        deaths: dataCountryDaily.deaths.slice(Math.max(dataCountryDaily.deaths.length - 7, 0)),
-        recovered: dataCountryDaily.recovered.slice(Math.max(dataCountryDaily.recovered.length - 7, 0))
+        dates: dataCountryDailyTotal.dates.slice(n-7, n),
+        cases: casesD,
+        deaths: deathsD,
+        recovered: recoveredD
     }
 
     return [this.dataCountryDaily, this.dataCountryDailyTotal];
@@ -305,6 +306,7 @@ async getDataCountryDaily(c: string){
 
 
 goToCountry(c : string){
+    console.log(c_nop);
     this.router.navigate(['country/', c], {queryParams: {name: c}});
 }
 
@@ -314,10 +316,10 @@ async updateCountriesNames(){
     for (var c of cAPI){
         countriesNames.push(c["Country"]);
     }
-    this.countries = countriesNames;
+    this.countries = countriesNames.sort();
+
     localStorage.setItem("countries", JSON.stringify(this.countries));
 }
-
 
 getCountriesNames(){
     if( !localStorage.hasOwnProperty("countries")){
@@ -334,7 +336,8 @@ getSummary(){
 }
 
 getSummaryCountryDaily(c : string){
-    return this.http.get<JSON>('https://api.covid19api.com/dayone/country/'+c).toPromise();
+    let c_nop = c.replace(/["'()]/g,"");
+    return this.http.get<JSON>('https://api.covid19api.com/dayone/country/'+c_nop).toPromise();
 }
 
 getSummaryWorldDaily(){

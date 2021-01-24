@@ -13,7 +13,7 @@ export class AuthGuard implements CanActivate {
     next: ActivatedRouteSnapshot,
     state: RouterStateSnapshot): Observable<boolean | UrlTree> | Promise<boolean | UrlTree> | boolean | UrlTree {
       if(!this.covidService.userSignedIn()){
-        this.router.navigate(["signin"]);
+        this.router.navigate(["worldwide"]);
       }
     return true;
   }

@@ -2,6 +2,9 @@ import { Component, OnInit } from '@angular/core';
 import { CovidService } from '../covid.service';
 import { User } from '../user.model';
 import { News } from '../news.model';
+import { CommonModule } from '@angular/common';
+import { BrowserModule } from '@angular/platform-browser';
+
 
 @Component({
     selector: 'app-news',

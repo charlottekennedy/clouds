@@ -14,6 +14,18 @@ signedIn : boolean = false;
 constructor(public covidService : CovidService) { }
 
 ngOnInit(): void {
-this.signedIn = this.covidService.userSignedIn();
+    this.signedIn = this.covidService.userSignedIn();
+}
+
+async login(){
+    this.signedIn = this.covidService.userSignedIn();
+    if (this.signedIn){
+        this.covidService.signOut();
+        this.signedIn = false;
+    }
+    else {
+        await this.covidService.signInWithGoogle();
+        this.signedIn = true;
+    }
 }
 }

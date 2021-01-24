@@ -1,7 +1,15 @@
-.boxed {
-    background-color: lightgray;
-    height: 200%;
+table.table-bordered > tbody > tr > td{
+    border:2px solid white;
 }
+
+table.table-bordered > thead > tr > th{
+    border:2px solid white;
+}
+
+div{
+margin-top: 20px;
+}
+
 
 
 
