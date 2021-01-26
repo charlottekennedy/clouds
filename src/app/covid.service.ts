@@ -306,7 +306,6 @@ async getDataCountryDaily(c: string){
 
 
 goToCountry(c : string){
-    console.log(c_nop);
     this.router.navigate(['country/', c], {queryParams: {name: c}});
 }
 
