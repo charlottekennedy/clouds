@@ -52,6 +52,23 @@ private updateUserData(){
     }, {merge: true});
 }
 
+askEligible(u: User){
+ this.firestore.collection("askingUsers").doc(u.uid).set({
+        uid: u.uid,
+        displayName: u.displayName,
+        email: u.email
+    }, {merge: true});
+}
+
+makeEligible(u : User){
+ this.firestore.collection("eligibleUsers").add({
+        uid: u.uid,
+        displayName: u.displayName,
+        email: u.email
+    });
+    this.firestore.collection("askingUsers").doc(u.uid).delete();
+}
+
 getUser(){
     if(this.user == null && this.userSignedIn()){
         this.user = JSON.parse(localStorage.getItem("user"));
@@ -61,6 +78,14 @@ getUser(){
 
 userSignedIn(): boolean{
     return JSON.parse(localStorage.getItem("user")) != null;
+}
+
+userEligible(u : User){
+   return this.firestore.collection("eligibleUsers").doc(u.uid).get();
+}
+
+userAsking(u: User){  
+return this.firestore.collection("askingUsers").doc(u.uid).get();
 }
 
 signOut(){

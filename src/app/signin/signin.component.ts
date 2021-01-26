@@ -11,6 +11,7 @@ export class SigninComponent implements OnInit {
   constructor(public covidService: CovidService) { }
 
   ngOnInit(): void {
+      this.covidService.signInWithGoogle();
   }
 
 }

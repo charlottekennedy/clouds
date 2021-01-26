@@ -25,7 +25,6 @@ dataCountryDaily: DataDaily;
 dataCountryDailyTotal: DataDaily;
 barChartLabels: Label[];
 lineChartLabels: Label[];
-signedIn: boolean;
 
 public pieChartOptions: ChartOptions = {
     responsive: true,
@@ -79,16 +78,6 @@ this.covidService.getNewsCountry(this.name).subscribe(
     (res: News[]) => {this.news = res;});
 }
 
-async login(){
-    this.signedIn = this.covidService.userSignedIn();
-    if (this.signedIn){
-        this.router.navigate(["news"]);
-    }
-    else {
-        await this.covidService.signInWithGoogle();
-        this.signedIn = true;
-    }
-}
 
 async dailyDataPlots(){
     let dataCountryD = await this.covidService.getDataCountryDaily(this.name);

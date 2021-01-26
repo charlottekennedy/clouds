@@ -1,12 +1,10 @@
 <div class="text-center p-1 bg-dark text-white" >
     <a href= "covid-data" class = "text-primary font-weight-bold"></a>
-        <a href = "worldwide" class = "text-primary font-weight-bold"> > Worldwide data < </a>
+        <a href = "worldwide" class = "text-primary font-weight-bold"> . Worldwide data . </a>
 </div>
 
 <div class="row">
-  <div class="col-sm-6">
     <h3>Welcome {{ user.displayName }}</h3>
-  </div>
 </div>
 
 <div class="my-3" *ngIf="news && news.length > 0">
@@ -27,7 +25,28 @@
     </tbody>
   </table>
 </div>
-<app-add-news></app-add-news>
+
+<div *ngIf="isEligible">
+    <app-add-news></app-add-news>
+</div>
+
+<div *ngIf="isAsking">
+Your demand to add news was submitted.
+</div>
+
+<div *ngIf="!isAsking" class = "text-center">
+    <button class="btn btn-success" 
+        (click) = "askEligible()"
+        >
+            Click here to demand permission to add news.
+        </button>
+</div>
+
+<div *ngIf="user.uid = '' ">
+
+</div>
+
+
 
 
 

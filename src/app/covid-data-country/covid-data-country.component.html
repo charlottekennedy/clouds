@@ -50,6 +50,7 @@ Corona Virus Summary in {{ name }}
 
         </tbody>
     </table>
+     <p class="font-italic">Last Updated: {{ dataC?.date }}</p>
 </div>
 
 <div id="country" class=" p-2 bg-light font-weight-bold" >
@@ -67,7 +68,10 @@ Corona Virus Cases Distribution in {{name}}
     </canvas>
 </div>
 
+<div id="country" class=" p-2 bg-light font-weight-bold" >
 Daily Corona Virus Cases in {{name}}
+</div>
+
 
 <div class="chart-wrapper" *ngIf="barChartData">
     <canvas baseChart 
@@ -80,7 +84,10 @@ Daily Corona Virus Cases in {{name}}
     </canvas>
 </div>
 
+
+<div id="country" class=" p-2 bg-light font-weight-bold" >
 Total Corona Virus in {{name}}
+</div>
 
 <div class="chart-wrapper" *ngIf="lineChartData">
     <canvas baseChart 
@@ -111,5 +118,3 @@ Total Corona Virus in {{name}}
         </tbody>
     </table>
 </div>
-
-<button (click)= "login()" >Add News</button>

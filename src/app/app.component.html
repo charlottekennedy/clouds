@@ -12,6 +12,15 @@
         </button>
     </div>
     
+    <div  class="text-right p-2">
+        <button *ngIf= "router.url != '/news'" class="btn btn-success" 
+        (click) = "goToNews()"
+        >
+            Add News
+        </button>
+    </div>
+    
+    
     <div id = "titlelogo">
         
         <h1 id = "titletext">

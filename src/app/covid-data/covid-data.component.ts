@@ -33,7 +33,6 @@ sortedData: DataCountry[];
 namesCountry: string[];
 barChartLabels: Label[];
 lineChartLabels: Label[];
-signedIn:boolean;
 
 
 public pieChartOptions: ChartOptions = {
@@ -73,8 +72,6 @@ ngOnInit(): void {
    
     this.user = this.covidService.getUser();
     
-    this.signedIn = this.covidService.userSignedIn();
-    
 this.covidService.getDataWorld().subscribe((res: DataWorld) => {
     this.dataWorld = res;
     this.pieChartData =  [this.dataWorld.totalDeaths, this.dataWorld.totalRecovered, this.dataWorld.activeCases];
@@ -85,17 +82,6 @@ this.getDataC();
 
 
 this.covidService.getNewsCountry("Worldwide").subscribe((news : News[]) => {this.news = news;} );
-}
-
-async login(){
-    this.signedIn = this.covidService.userSignedIn();
-    if (this.signedIn){
-        this.router.navigate(["news"]);
-    }
-    else {
-        await this.covidService.signInWithGoogle();
-        this.signedIn = true;
-    }
 }
 
 async dailyDataPlots(){
