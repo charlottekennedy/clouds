@@ -30,7 +30,6 @@ dataWorld : DataWorld;
 dataWorldDaily: DataDaily;
 dataWorldDailyTotal: DataDaily;
 sortedData: DataCountry[];
-namesCountry: string[];
 barChartLabels: Label[];
 lineChartLabels: Label[];
 

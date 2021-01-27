@@ -24,8 +24,7 @@ constructor(private covidService: CovidService,  public datepipe: DatePipe) { }
 ngOnInit(): void {
 
     this.countries = this.covidService.getCountriesNames();
-    this.countries.push("Worldwide");
-    
+    this.countries.push("Worldwide");    
 }
 
 addN(){

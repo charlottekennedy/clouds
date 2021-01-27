@@ -1,29 +1,25 @@
 <div class="text-center p-1 bg-dark text-white" >
     <a href= "covid-data" class = "text-primary font-weight-bold"></a>
-        <a href = "worldwide" class = "text-primary font-weight-bold"> . Worldwide data . </a>
+    <a href = "worldwide" class = "text-primary font-weight-bold"> . Worldwide data . </a>
 </div>
 
 <div class="row">
     <h3>Welcome {{ user.displayName }}</h3>
 </div>
 
-<div class="my-3" *ngIf="news && news.length > 0">
-  <table class="table table-bordered table-striped">
-    <thead>
-      <tr>
-        <th>Date</th>
-        <th>Description</th>
-        <th>Country</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr *ngFor="let news_item of news">
-        <td>{{ news_item.date }}</td>
-        <td>{{ news_item.descrip }}</td>
-        <td>{{ news_item.country }}</td>
-      </tr>
-    </tbody>
-  </table>
+<div *ngIf="user.uid == 'sD85jg2ODNceWK54LHEKWIpIt0K3'">
+    <h4>Add an eligible user</h4>
+    <form (ngSubmit)="becomeEligible()">
+        <div class="col-md-6 form-group">
+            <select class="form-control" id="askingUid" required 
+                    [(ngModel)]="askingUid"
+                    name="askingUInput"
+                    placeholder="AskingU">
+                <option *ngFor="let a of askingUsers" [value]="a.uid">{{a.displayName}}</option>
+            </select>
+        </div>
+        <button class="btn btn-primary">Add</button>
+    </form>
 </div>
 
 <div *ngIf="isEligible">
@@ -31,20 +27,39 @@
 </div>
 
 <div *ngIf="isAsking">
-Your demand to add news was submitted.
+    Your demand to add news was submitted.
 </div>
 
-<div *ngIf="!isAsking" class = "text-center">
+<div *ngIf="!isAsking && !isEligible" class = "text-center">
     <button class="btn btn-success" 
-        (click) = "askEligible()"
-        >
-            Click here to demand permission to add news.
-        </button>
+            (click) = "askEligible()"
+            >
+        Click here to demand permission to add news.
+    </button>
 </div>
 
-<div *ngIf="user.uid = '' ">
-
+<div></div>
+<h4>My news</h4>
+<div class="my-3" *ngIf="news && news.length > 0">
+    <table class="table table-bordered table-striped">
+        <thead>
+            <tr>
+                <th>Date</th>
+                <th>Description</th>
+                <th>Country</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr *ngFor="let news_item of news">
+                <td>{{ news_item.date }}</td>
+                <td>{{ news_item.descrip }}</td>
+                <td>{{ news_item.country }}</td>
+            </tr>
+        </tbody>
+    </table>
 </div>
+
+
 
 
 

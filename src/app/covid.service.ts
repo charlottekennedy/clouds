@@ -53,20 +53,18 @@ private updateUserData(){
 }
 
 askEligible(u: User){
- this.firestore.collection("askingUsers").doc(u.uid).set({
+    this.firestore.collection("askingUsers").doc(u.uid).set({
         uid: u.uid,
         displayName: u.displayName,
         email: u.email
     }, {merge: true});
 }
 
-makeEligible(u : User){
- this.firestore.collection("eligibleUsers").add({
-        uid: u.uid,
-        displayName: u.displayName,
-        email: u.email
+makeEligible(uid : string){
+    this.firestore.collection("askingUsers").doc(uid).valueChanges().subscribe( (res:User) =>{
+        this.firestore.collection("eligibleUsers").doc(res.uid).set(res);
+        this.firestore.collection("askingUsers").doc(res.uid).delete();
     });
-    this.firestore.collection("askingUsers").doc(u.uid).delete();
 }
 
 getUser(){
@@ -81,12 +79,18 @@ userSignedIn(): boolean{
 }
 
 userEligible(u : User){
-   return this.firestore.collection("eligibleUsers").doc(u.uid).get();
+    return this.firestore.collection("eligibleUsers").doc(u.uid).get();
 }
 
 userAsking(u: User){  
-return this.firestore.collection("askingUsers").doc(u.uid).get();
+    return this.firestore.collection("askingUsers").doc(u.uid).get();
 }
+
+getAskingUsers(){
+    return this.firestore.collection("askingUsers").valueChanges();
+}
+
+
 
 signOut(){
     this.afAuth.signOut();
@@ -100,11 +104,11 @@ getNewsCountry(c: string){
         .doc(c).collection("newsC", ref => ref.orderBy('date', 'asc')).valueChanges();
 }
 
-getNewsUser(name: string){
-   let newsC=[]; 
-   let countries = this.getCountriesNames();
+getNewsUser(){
+    let newsC=[]; 
+    let countries = this.getCountriesNames();
     for (var c of countries){
- newsC.push(this.firestore.collection("news").doc(c).collection("newsC").valueChanges());
+        newsC.push(this.firestore.collection("news").doc(c).collection("newsC").valueChanges());
     }
     newsC.push(this.firestore.collection("news").doc("Worldwide").collection("newsC").valueChanges());
     return newsC;
@@ -204,7 +208,7 @@ async updateCountry(c: string){
     var countries = summ["Countries"];
     for (var co of countries){
         if (co["Country"]==c){
-            this.firestore.collection("dataCountry").doc(c).set({
+           this.firestore.collection("dataCountry").doc(c).set({
                 date: latestDate,
                 country: c,
                 totalCases:co["TotalConfirmed"],
@@ -268,7 +272,7 @@ getDataCountry(c: string){
 
 async getDataCountryDaily(c: string){
     let summDaily = await this.getSummaryCountryDaily(c);
-    
+
     let dates = [];
     let cases = [];
     let deaths = [];
@@ -361,7 +365,9 @@ getSummary(){
 
 getSummaryCountryDaily(c : string){
     let c_nop = c.replace(/["'()]/g,"");
-    return this.http.get<JSON>('https://api.covid19api.com/dayone/country/'+c_nop).toPromise();
+    let c_nop2 = c_nop.replace(/[òóôõö]/g,"o");
+    console.log(c_nop2);
+    return this.http.get<JSON>('https://api.covid19api.com/dayone/country/'+c_nop2).toPromise();
 }
 
 getSummaryWorldDaily(){
